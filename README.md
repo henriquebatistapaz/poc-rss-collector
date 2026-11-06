@@ -11,6 +11,10 @@ Mini projeto Java privado para validar URLs e extrair links de feeds RSS e Atom.
 
 A validação comprova apenas a resposta disponível naquele momento; um feed pode mudar ou ficar indisponível depois.
 
+## Integração
+
+Este projeto continua independente e também é usado como biblioteca Maven pelo repositório privado `content-collection-hub-mini`, que reaproveita o código para validar e ler feeds RSS/Atom. Por isso, `mvn package` gera dois jars: o comum, usado como dependência, e o executável com sufixo `-exec`. Para o hub enxergar a versão local, rode `mvn install` neste projeto.
+
 ## Executar
 
 ```bash
