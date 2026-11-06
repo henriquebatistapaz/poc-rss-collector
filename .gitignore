@@ -1,0 +1,12 @@
+target/
+*.class
+.env
+.env.*
+/docs/
+/.ai-ready/
+/.ai-ready.json
+/AGENTS.md
+/CLAUDE.md
+/GEMINI.md
+/CODEX.md
+.DS_Store
