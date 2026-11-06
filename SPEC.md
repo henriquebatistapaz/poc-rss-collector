@@ -15,20 +15,21 @@ Define a small Java service that can collect article and resource links publishe
 
 ## Current implementation slice
 
-- RSS 2.0 parsing is implemented for an XML document supplied by the caller; it does not fetch feeds over the network.
-- Feed URL validation checks absolute HTTP(S) URL syntax and rejects credentials, local hostnames, and private IP literals.
-- RSS document validation checks the URL and confirms an RSS 2.0 root with a channel.
+- RSS 2.0 and Atom 1.0 parsing are implemented for XML documents supplied by the caller.
+- `POST /v1/feeds/validate` accepts a public feed URL, fetches its current response, and reports whether it is RSS 2.0 or Atom 1.0.
+- The HTTP fetcher uses timeouts, a 1 MB response limit, at most three redirects, public-address DNS checks, and does not forward cookies or credentials.
 - XML parsing disables DTDs and external entities and limits document size and item count.
-- Atom parsing, live feed fetching, persistence, and API endpoints remain future work.
+- Feed registration, persistence, scheduled refresh, and message delivery remain future work.
 
-## Initial API direction (not implemented)
+## API
 
-- `POST /v1/feeds` — register a feed URL.
-- `GET /v1/feeds` — list registered feeds and their collection status.
-- `POST /v1/feeds/{id}/refresh` — request a manual refresh.
-- `GET /v1/links` — list collected links with optional feed and date filters.
+- `POST /v1/feeds/validate` — fetch a public URL and check whether the current response is a valid RSS 2.0 or Atom 1.0 document.
+- `POST /v1/feeds` — register a feed URL (future).
+- `GET /v1/feeds` — list registered feeds and collection status (future).
+- `POST /v1/feeds/{id}/refresh` — request a manual refresh (future).
+- `GET /v1/links` — list collected links with optional feed and date filters (future).
 
-These endpoints are a direction for a later implementation, not a commitment to a final API shape.
+The registration, refresh, and links endpoints are a direction for later implementation, not a commitment to final API shapes.
 
 ## Safety and operating limits
 
@@ -48,9 +49,9 @@ These endpoints are a direction for a later implementation, not a commitment to 
 
 ## Acceptance criteria for the first implementation slice
 
-1. Unit tests cover RSS 2.0 and Atom 1.0 examples, duplicate identity, missing optional metadata, malformed entries, invalid URLs, and hostile XML features.
+1. Unit tests cover RSS 2.0 and Atom 1.0 examples, missing optional metadata, malformed entries, invalid URLs, the URL validation API, and hostile XML features.
 2. Parser output is deterministic and contains the source feed, stable identity, title when present, normalized link, and publication time when valid.
-3. No network access or persistence is required to run parser tests.
+3. No network access or persistence is required to run the standard parser and API tests.
 4. Security limits for network fetching are specified before any fetcher is implemented.
 
 ## References

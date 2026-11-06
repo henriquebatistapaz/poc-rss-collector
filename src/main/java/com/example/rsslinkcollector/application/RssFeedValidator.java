@@ -1,5 +1,8 @@
 package com.example.rsslinkcollector.application;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class RssFeedValidator {
 
     private final RssFeedLinkValidator linkValidator;
@@ -10,8 +13,8 @@ public class RssFeedValidator {
         this.parser = parser;
     }
 
-    /** Validates the feed URL shape and confirms that the supplied document is RSS 2.0 XML. */
+    /** Validates a safe public HTTP(S) feed URL and confirms RSS 2.0 or Atom 1.0 XML. */
     public boolean isValidRssFeed(String feedUrl, String xml) {
-        return linkValidator.isValidFeedUrl(feedUrl) && parser.isValidRssDocument(xml);
+        return linkValidator.isValidFeedUrl(feedUrl) && parser.isValidFeedDocument(xml);
     }
 }
