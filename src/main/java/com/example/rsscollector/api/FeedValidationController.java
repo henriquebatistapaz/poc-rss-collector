@@ -1,7 +1,7 @@
-package com.example.rsslinkcollector.api;
+package com.example.rsscollector.api;
 
-import com.example.rsslinkcollector.application.FeedUrlValidationService;
-import com.example.rsslinkcollector.application.FeedUrlValidationService.ValidationResult;
+import com.example.rsscollector.application.FeedUrlValidationService;
+import com.example.rsscollector.application.FeedUrlValidationService.ValidationResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;

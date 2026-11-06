@@ -1,6 +1,6 @@
-package com.example.rsslinkcollector.application;
+package com.example.rsscollector.application;
 
-import com.example.rsslinkcollector.domain.FeedItem;
+import com.example.rsscollector.domain.FeedItem;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
