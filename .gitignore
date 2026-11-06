@@ -1,0 +1,10 @@
+target/
+*.class
+.env
+.env.*
+/docs/
+/AGENTS.md
+/CLAUDE.md
+/GEMINI.md
+/CODEX.md
+.DS_Store
