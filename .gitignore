@@ -2,7 +2,6 @@ target/
 *.class
 .env
 .env.*
-/docs/
 /.ai-ready/
 /.ai-ready.json
 /AGENTS.md
