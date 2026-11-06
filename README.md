@@ -1,65 +1,73 @@
 # RSS Link Collector Mini
 
-Mini projeto Java privado para validar feeds e extrair links de publicações RSS.
+Mini projeto Java privado para validar URLs e extrair links de feeds RSS e Atom.
 
 ## Estado atual
 
-- Parser RSS 2.0 local, sem chamadas de rede.
-- Validador de URL para feeds HTTP(S) e de documento RSS 2.0 fornecido pelo chamador.
-- XML protegido contra DTD e entidades externas; limites de tamanho do documento e quantidade de itens.
-- Atom, coleta pela rede, armazenamento, endpoints REST e agendamento ainda não implementados.
+- Parser RSS 2.0 e Atom 1.0 com XML protegido contra DTD e entidades externas.
+- API `POST /v1/feeds/validate` que recebe uma URL e informa se a resposta é um feed RSS/Atom válido.
+- Busca HTTP com timeout, tamanho máximo de resposta, limite de redirecionamentos e validação de destino público.
+- Sem persistência, agendamento ou adapters de origem.
 
-O validador recebe o conteúdo XML junto com a URL. Ele confirma a forma da URL e do documento, mas não baixa nem comprova que o servidor remoto continuará respondendo como RSS. A busca de feeds será uma etapa posterior, com controles de SSRF, redirecionamentos e limites de rede.
+A validação comprova apenas a resposta disponível naquele momento; um feed pode mudar ou ficar indisponível depois.
 
-## Executar os testes
+## Executar
 
 ```bash
 mvn test
+mvn spring-boot:run
 ```
 
-Os testes JUnit usam XML local e não dependem de disponibilidade externa.
+Swagger UI: <http://localhost:8080/swagger-ui/index.html>
+OpenAPI JSON: <http://localhost:8080/v3/api-docs>
 
-## Usar o parser
+## Consultar se um link é um feed válido
+
+```bash
+curl -X POST http://localhost:8080/v1/feeds/validate \\
+  -H 'Content-Type: application/json' \\
+  -d '{"feedUrl":"https://feeds.bbci.co.uk/news/rss.xml"}'
+```
+
+Exemplo de resposta:
+
+```json
+{"feedUrl":"https://feeds.bbci.co.uk/news/rss.xml","valid":true,"itemCount":30,"message":"Valid RSS 2.0 or Atom 1.0 feed"}
+```
+
+A API aceita apenas HTTP(S) público, verifica endereços DNS antes de cada conexão e redirect, limita a resposta a 1 MB, usa timeout e não segue mais de três redirects. A suíte JUnit padrão não acessa rede: usa XML local e mocks.
+
+## Usar o parser localmente
 
 ```java
 var urlValidator = new RssFeedLinkValidator();
 var parser = new RssFeedParser(urlValidator);
 var validator = new RssFeedValidator(urlValidator, parser);
 
-boolean valid = validator.isValidRssFeed(feedUrl, xmlContent);
+boolean valid = validator.isValidRssFeed(feedUrl, xmlContent); // RSS 2.0 ou Atom 1.0
 if (valid) {
     var items = parser.parse(feedUrl, xmlContent);
 }
 ```
 
-`RssFeedParser` extrai GUID (ou usa o link como identidade), título, link normalizado e `pubDate`. Itens sem link HTTP(S) válido são ignorados sem descartar os demais itens válidos do documento.
+O parser extrai GUID/Atom ID (ou usa o link como identidade), título, link normalizado e data de publicação. Um feed Atom precisa conter `id`, `title` e uma data `updated` válida. Para entradas Atom, escolhe links alternativos HTML e resolve links relativos contra a URL do feed. Itens sem link HTTP(S) válido são ignorados sem descartar os demais itens válidos.
 
 ## Feeds RSS reais para testes manuais
-
-Estes feeds públicos responderam com HTTP 200 e conteúdo XML RSS quando verificados:
 
 - NASA News Releases: <https://www.nasa.gov/news-release/feed/>
 - NASA Image of the Day: <https://www.nasa.gov/feeds/iotd-feed/>
 - BBC News: <https://feeds.bbci.co.uk/news/rss.xml>
 
-Para buscar os três feeds e validar os documentos com o parser, execute os testes externos opcionais:
+Para buscar esses feeds e validar os documentos com o parser, execute o teste externo opcional:
 
 ```bash
 RSS_EXTERNAL_TESTS=true mvn test
 ```
 
-O teste externo não segue redirecionamentos, usa timeout e limite de 1 MB. A suíte padrão não acessa a rede.
-
-Exemplo para inspecionar uma resposta:
-
-```bash
-curl -fsSL 'https://www.nasa.gov/news-release/feed/' | head -c 300
-```
-
-Essas URLs também servem para inspeção manual; elas não são usadas pela suíte padrão.
+O teste externo usa timeout e limite de 1 MB. Essas URLs também servem para inspeção manual; não são usadas pela suíte padrão.
 
 ## Stack
 
-Java 21, Spring Boot, Maven e JUnit 5. O projeto ainda não publica uma API HTTP.
+Java 21, Spring Boot, Maven, JUnit 5, Spring MVC e springdoc-openapi.
 
 Veja [SPEC.md](SPEC.md) para escopo e decisões, e [TODO.md](TODO.md) para as próximas fatias.
