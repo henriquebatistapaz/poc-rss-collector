@@ -11,10 +11,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.example</groupId>
-    <artifactId>rss-link-collector-mini</artifactId>
+    <groupId>com.henrique</groupId>
+    <artifactId>rss-collector-mini</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>RSS Link Collector Mini</name>
+    <name>RSS Collector Mini</name>
     <description>Private mini project specification for collecting links from RSS and Atom feeds</description>
 
     <properties>
@@ -48,7 +48,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!-- Keep the plain jar as the main artifact so content-collection-hub-mini can depend on it. -->
+                    <!-- Keep the plain jar as the main artifact so dashboard-mini can depend on it. -->
                     <classifier>exec</classifier>
                 </configuration>
             </plugin>

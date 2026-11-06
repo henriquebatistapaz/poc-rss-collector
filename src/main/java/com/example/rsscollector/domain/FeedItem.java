@@ -1,4 +1,4 @@
-package com.example.rsslinkcollector.domain;
+package com.example.rsscollector.domain;
 
 import java.net.URI;
 import java.time.Instant;
