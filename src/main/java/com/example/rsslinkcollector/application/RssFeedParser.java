@@ -22,7 +22,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RssFeedParser {
     private static final int MAX_DOCUMENT_CHARS = 1_000_000;
     private static final int MAX_ITEMS = 1_000;
@@ -39,38 +41,41 @@ public class RssFeedParser {
         }
         Document document = parseDocument(xml);
         Element root = document.getDocumentElement();
-        if (!"rss".equals(localName(root)) || !"2.0".equals(root.getAttribute("version"))) {
-            throw new IllegalArgumentException("Document is not an RSS 2.0 feed");
-        }
-        Element channel = firstChild(root, "channel");
-        if (channel == null) {
-            throw new IllegalArgumentException("RSS feed must contain a channel");
-        }
-
         List<FeedItem> items = new ArrayList<>();
-        for (Element item : childElements(channel, "item")) {
-            if (items.size() >= MAX_ITEMS) {
-                break;
+        if (isRssRoot(root)) {
+            Element channel = firstChild(root, "channel");
+            if (channel == null) throw new IllegalArgumentException("RSS feed must contain a channel");
+            for (Element item : childElements(channel, "item")) {
+                if (items.size() >= MAX_ITEMS) break;
+                FeedItem parsed = parseRssItem(feedUrl, item);
+                if (parsed != null) items.add(parsed);
             }
-            FeedItem parsed = parseItem(feedUrl, item);
-            if (parsed != null) {
-                items.add(parsed);
+        } else if (isValidAtomFeed(root)) {
+            for (Element entry : childElements(root, "entry")) {
+                if (items.size() >= MAX_ITEMS) break;
+                FeedItem parsed = parseAtomEntry(feedUrl, entry);
+                if (parsed != null) items.add(parsed);
             }
+        } else {
+            throw new IllegalArgumentException("Document is neither RSS 2.0 nor Atom 1.0");
         }
         return List.copyOf(items);
     }
 
     boolean isValidRssDocument(String xml) {
+        return isValidFeedDocument(xml);
+    }
+
+    boolean isValidFeedDocument(String xml) {
         try {
             Element root = parseDocument(xml).getDocumentElement();
-            return "rss".equals(localName(root)) && "2.0".equals(root.getAttribute("version"))
-                    && firstChild(root, "channel") != null;
+            return (isRssRoot(root) && firstChild(root, "channel") != null) || isValidAtomFeed(root);
         } catch (IllegalArgumentException exception) {
             return false;
         }
     }
 
-    private FeedItem parseItem(String feedUrl, Element element) {
+    private FeedItem parseRssItem(String feedUrl, Element element) {
         String linkValue = childText(element, "link");
         URI link = normalizeHttpUrl(linkValue);
         if (link == null) {
@@ -81,6 +86,59 @@ public class RssFeedParser {
         String title = childText(element, "title");
         Instant publishedAt = parseDate(childText(element, "pubDate"));
         return new FeedItem(feedUrl.trim(), id, title, link, publishedAt);
+    }
+
+    private FeedItem parseAtomEntry(String feedUrl, Element entry) {
+        URI link = atomLink(feedUrl, entry);
+        if (link == null) return null;
+        String id = childText(entry, "id");
+        if (id == null) id = link.toString();
+        String title = childText(entry, "title");
+        String dateValue = childText(entry, "published");
+        if (dateValue == null) dateValue = childText(entry, "updated");
+        return new FeedItem(feedUrl.trim(), id, title, link, parseDate(dateValue));
+    }
+
+    private URI atomLink(String feedUrl, Element entry) {
+        Element fallback = null;
+        for (Element linkElement : childElements(entry, "link")) {
+            String rel = linkElement.getAttribute("rel");
+            if (rel.isBlank()) rel = "alternate";
+            if (!"alternate".equals(rel)) continue;
+            String type = linkElement.getAttribute("type");
+            if (fallback == null) fallback = linkElement;
+            if (type.isBlank() || type.equalsIgnoreCase("text/html")
+                    || type.equalsIgnoreCase("application/xhtml+xml")) {
+                URI candidate = resolveAtomHref(feedUrl, linkElement.getAttribute("href"));
+                if (candidate != null) return candidate;
+            }
+        }
+        return fallback == null ? null : resolveAtomHref(feedUrl, fallback.getAttribute("href"));
+    }
+
+    private URI resolveAtomHref(String feedUrl, String href) {
+        if (href == null || href.isBlank()) return null;
+        try {
+            URI resolved = new URI(feedUrl).resolve(href.trim());
+            return normalizeHttpUrl(resolved.toString());
+        } catch (URISyntaxException exception) {
+            return null;
+        }
+    }
+
+    private boolean isRssRoot(Element root) {
+        return "rss".equals(localName(root)) && "2.0".equals(root.getAttribute("version"));
+    }
+
+    private boolean isAtomRoot(Element root) {
+        return "feed".equals(localName(root))
+                && "http://www.w3.org/2005/Atom".equals(root.getNamespaceURI());
+    }
+
+    private boolean isValidAtomFeed(Element root) {
+        if (!isAtomRoot(root)) return false;
+        return childText(root, "id") != null && childText(root, "title") != null
+                && parseDate(childText(root, "updated")) != null;
     }
 
     private Document parseDocument(String xml) {
