@@ -1,4 +1,4 @@
-package com.example.rsslinkcollector.application;
+package com.example.rsscollector.application;
 
 import java.io.IOException;
 
