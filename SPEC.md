@@ -13,6 +13,14 @@ Define a small Java service that can collect article and resource links publishe
 - Keep collection in memory for the first implementation slice; define persistence as a later step.
 - Expose a small REST API only after parser behavior is covered by unit tests.
 
+## Current implementation slice
+
+- RSS 2.0 parsing is implemented for an XML document supplied by the caller; it does not fetch feeds over the network.
+- Feed URL validation checks absolute HTTP(S) URL syntax and rejects credentials, local hostnames, and private IP literals.
+- RSS document validation checks the URL and confirms an RSS 2.0 root with a channel.
+- XML parsing disables DTDs and external entities and limits document size and item count.
+- Atom parsing, live feed fetching, persistence, and API endpoints remain future work.
+
 ## Initial API direction (not implemented)
 
 - `POST /v1/feeds` — register a feed URL.
