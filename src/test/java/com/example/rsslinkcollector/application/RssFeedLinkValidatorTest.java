@@ -31,5 +31,7 @@ class RssFeedLinkValidatorTest {
         assertFalse(validator.isValidFeedUrl("http://127.0.0.1/feed.xml"));
         assertFalse(validator.isValidFeedUrl("http://192.168.1.20/feed.xml"));
         assertFalse(validator.isValidFeedUrl("http://[::1]/feed.xml"));
+        assertFalse(validator.isValidFeedUrl("http://192.0.2.10/feed.xml"));
+        assertFalse(validator.isValidFeedUrl("http://[2001:db8::1]/feed.xml"));
     }
 }
