@@ -10,8 +10,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,9 +32,16 @@ public class RssFeedParser {
     private static final int MAX_ITEMS = 1_000;
 
     private final RssFeedLinkValidator linkValidator;
+    private final RssFeedLinkNormalizer linkNormalizer;
 
+    @Autowired
     public RssFeedParser(RssFeedLinkValidator linkValidator) {
+        this(linkValidator, new RssFeedLinkNormalizer());
+    }
+
+    RssFeedParser(RssFeedLinkValidator linkValidator, RssFeedLinkNormalizer linkNormalizer) {
         this.linkValidator = linkValidator;
+        this.linkNormalizer = linkNormalizer;
     }
 
     public List<FeedItem> parse(String feedUrl, String xml) {
@@ -41,25 +50,27 @@ public class RssFeedParser {
         }
         Document document = parseDocument(xml);
         Element root = document.getDocumentElement();
-        List<FeedItem> items = new ArrayList<>();
+        Map<ItemIdentity, FeedItem> items = new LinkedHashMap<>();
         if (isRssRoot(root)) {
             Element channel = firstChild(root, "channel");
             if (channel == null) throw new IllegalArgumentException("RSS feed must contain a channel");
+            int processed = 0;
             for (Element item : childElements(channel, "item")) {
-                if (items.size() >= MAX_ITEMS) break;
+                if (processed++ >= MAX_ITEMS) break;
                 FeedItem parsed = parseRssItem(feedUrl, item);
-                if (parsed != null) items.add(parsed);
+                if (parsed != null) addIfNew(items, parsed);
             }
         } else if (isValidAtomFeed(root)) {
+            int processed = 0;
             for (Element entry : childElements(root, "entry")) {
-                if (items.size() >= MAX_ITEMS) break;
+                if (processed++ >= MAX_ITEMS) break;
                 FeedItem parsed = parseAtomEntry(feedUrl, entry);
-                if (parsed != null) items.add(parsed);
+                if (parsed != null) addIfNew(items, parsed);
             }
         } else {
             throw new IllegalArgumentException("Document is neither RSS 2.0 nor Atom 1.0");
         }
-        return List.copyOf(items);
+        return List.copyOf(items.values());
     }
 
     boolean isValidRssDocument(String xml) {
@@ -176,23 +187,18 @@ public class RssFeedParser {
         }
         try {
             URI uri = new URI(value.trim()).normalize();
-            String scheme = uri.getScheme();
-            String host = uri.getHost();
-            if (scheme == null || host == null || uri.getUserInfo() != null
-                    || (!scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https"))) {
-                return null;
-            }
-            int port = uri.getPort();
-            if ((scheme.equalsIgnoreCase("http") && port == 80)
-                    || (scheme.equalsIgnoreCase("https") && port == 443)) {
-                port = -1;
-            }
-            return new URI(scheme.toLowerCase(Locale.ROOT), null, host.toLowerCase(Locale.ROOT), port,
-                    uri.getPath(), uri.getQuery(), null).normalize();
+            return linkNormalizer.normalize(uri);
         } catch (URISyntaxException exception) {
             return null;
         }
     }
+
+    private void addIfNew(Map<ItemIdentity, FeedItem> items, FeedItem item) {
+        String itemId = item.id() == null || item.id().isBlank() ? item.link().toString() : item.id().trim();
+        items.putIfAbsent(new ItemIdentity(item.sourceFeed(), itemId), item);
+    }
+
+    private record ItemIdentity(String sourceFeed, String itemId) {}
 
     private Instant parseDate(String value) {
         if (value == null) {
