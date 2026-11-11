@@ -1,0 +1,202 @@
+{
+  "ai_version": "fc05cc8",
+  "profile": "project",
+  "installed_at": "2026-11-06",
+  "stack": "Java 27, Maven, Spring Boot 4.1.2",
+  "platform": "github",
+  "harness": false,
+  "understand_anything": false,
+  "managed_files": [
+    {
+      "source": "prompts/fix-findings.prompt.md",
+      "target": ".github/prompts/fix-findings.prompt.md",
+      "hash": "7a689f3a42608cf9b40cb5a03907125890a35b36f47f3455714f0326a5570a46"
+    },
+    {
+      "source": "prompts/implement-spec.prompt.md",
+      "target": ".github/prompts/implement-spec.prompt.md",
+      "hash": "d2c9058b907cf1db505a5d646961126b44716f1678f83181e64e7208c4205399"
+    },
+    {
+      "source": "prompts/metrics.prompt.md",
+      "target": ".github/prompts/metrics.prompt.md",
+      "hash": "e6e16cb66252967e8d6c91e65c209b67e63f694fa91b61f63a552085aba74920"
+    },
+    {
+      "source": "prompts/new-spec.prompt.md",
+      "target": ".github/prompts/new-spec.prompt.md",
+      "hash": "a9c2c0bf32ca8de378d1d71e73c703ecb979e016c26f8a31189e74f268efdd14"
+    },
+    {
+      "source": "prompts/next.prompt.md",
+      "target": ".github/prompts/next.prompt.md",
+      "hash": "36b497934df6ba60c0a2cdd6290adc8e377fcb04a655d0c7601215848c9b507d"
+    },
+    {
+      "source": "prompts/open-mr.prompt.md",
+      "target": ".github/prompts/open-mr.prompt.md",
+      "hash": "94a3ebb31f8386ed0d443ef23443cbbc1b07daf3d21c9e795e28734d34aca5b6"
+    },
+    {
+      "source": "prompts/retro.prompt.md",
+      "target": ".github/prompts/retro.prompt.md",
+      "hash": "e07ff837141b857abfd35c978066f09cbae85d7547622a5f770d2a2c4f535f7f"
+    },
+    {
+      "source": "prompts/spec-from-issue.prompt.md",
+      "target": ".github/prompts/spec-from-issue.prompt.md",
+      "hash": "841d5b17ad57041c6d2c0dac64d10f11670b47a3ca36ef0b13da7aa56c2f63cc"
+    },
+    {
+      "source": "prompts/tech-debt.prompt.md",
+      "target": ".github/prompts/tech-debt.prompt.md",
+      "hash": "317a3bd1a69bba7d2e5dda30b594516432816fba8bdd675ef8231bc954b5edf0"
+    },
+    {
+      "source": "prompts/test-plan.prompt.md",
+      "target": ".github/prompts/test-plan.prompt.md",
+      "hash": "ebb1c8a833b98577358bd9308a1cf867bd278515ec016a36f5dc9fb9c837535d"
+    },
+    {
+      "source": "prompts/validate-implementation.prompt.md",
+      "target": ".github/prompts/validate-implementation.prompt.md",
+      "hash": "d0d22e4c0265a3fd40afcc3aa3b0d9d28751939f8a30ab2810e0bbfb46e5db27"
+    },
+    {
+      "source": "agents/reviewer.agent.md",
+      "target": ".github/agents/reviewer.agent.md",
+      "hash": "c547d21c73a30c13a7777dd1c501b959524954249c5256397f3841972ea251d8"
+    },
+    {
+      "source": "agents/qa.agent.md",
+      "target": ".github/agents/qa.agent.md",
+      "hash": "5ca345606d3434efb33ed308842584c391d9a28dc46e585b588191c19ee66559"
+    },
+    {
+      "source": "agents/architect.agent.md",
+      "target": ".github/agents/architect.agent.md",
+      "hash": "90d17ff8af23dcb8c5d75c95b42969dc8c189f2c711f01180fae8e9e42ba4810"
+    },
+    {
+      "source": "instructions/java-tests.instructions.md",
+      "target": ".github/instructions/java-tests.instructions.md",
+      "hash": "42a6c65692c91ef58c2647f70fbf3531f555c218356edadc53cb5da5b665cf41"
+    },
+    {
+      "source": "skills/fix-root-cause/SKILL.md",
+      "target": ".github/skills/fix-root-cause/SKILL.md",
+      "hash": "783bbcc8d7e7cef3ecbbdfd68bfae2ef6b00f62963cb828285c6c828958376ed"
+    },
+    {
+      "source": "skills/upgrade-dependency/SKILL.md",
+      "target": ".github/skills/upgrade-dependency/SKILL.md",
+      "hash": "b55528c6ee6f997199a64dddcae1f49befb482b7e0c21ed204abf59686f11f7e"
+    },
+    {
+      "source": "skills/manage-secrets/SKILL.md",
+      "target": ".github/skills/manage-secrets/SKILL.md",
+      "hash": "1a1e4841715dce4b36dc3c44945e9a531121552620861512681a2d55241ca804"
+    },
+    {
+      "source": "skills/add-integration-test/SKILL.md",
+      "target": ".github/skills/add-integration-test/SKILL.md",
+      "hash": "8def9d5feb562bfc9dda2754b104f1904ea417aed285243e715651838ec96c17"
+    },
+    {
+      "source": "skills/debug-ci-failure/SKILL.md",
+      "target": ".github/skills/debug-ci-failure/SKILL.md",
+      "hash": "9dd6b0d9281472ce2a8912bace102399ec4162dd21347d964f56c46cdbc7726b"
+    },
+    {
+      "source": "skills/resolve-merge-conflict/SKILL.md",
+      "target": ".github/skills/resolve-merge-conflict/SKILL.md",
+      "hash": "ffe12f441854a75ee3e964ae08c991e67df3efa95d3ddd0aa1dde2f4bff1290c"
+    },
+    {
+      "source": "skills/inspect-rest-api/SKILL.md",
+      "target": ".github/skills/inspect-rest-api/SKILL.md",
+      "hash": "17789a3ec53a5debf2d7e07fca07af0db72bfa0eea7e53b02695dcaab5f88dcc"
+    },
+    {
+      "source": "guardrails/guard.sh",
+      "target": ".ai-init/hooks/guard.sh",
+      "hash": "0625cd9128bb77e5a2d530c8de4a2f47dee78b8a3b5e1d4d296c2cb6084aaae8"
+    },
+    {
+      "source": "prompts/ci-review.prompt.md",
+      "target": ".github/prompts/ci-review.prompt.md",
+      "hash": "8c0a8166fe678ebbc9be92009a93d4daf3f6cdf6e6ca1e32902773948c96a34e"
+    },
+    {
+      "source": "agents/security.agent.md",
+      "target": ".github/agents/security.agent.md",
+      "hash": "984e2b770453fe242d3191669e26ca3b32b6c6248e6780d51879ac214a7b5b47"
+    },
+    {
+      "source": "automation/doc-check.sh",
+      "target": ".ai-init/doc-check.sh",
+      "hash": "276a1c85dd7f55ca997c4a9d851fcd5a1595309a4e74f1623b063cf06990b735"
+    }
+  ],
+  "generated_files": [
+    {
+      "template": "templates/AGENTS.template.md",
+      "target": "AGENTS.md",
+      "template_hash": "3ce5cc5c106c8063c399de8b5f458c347d6ae7ec0a7286c32e61a3c48c453bb9"
+    },
+    {
+      "template": "templates/constitution.template.md",
+      "target": "docs/sdd/constitution.md",
+      "template_hash": "0404acd66f0b9d38b00b55abcbcdc08e2cf8a41deae771e3c93419803cf20d8f"
+    },
+    {
+      "template": "templates/ONBOARDING.template.md",
+      "target": "docs/ONBOARDING.md",
+      "template_hash": "ad2746ae326624145b106fb345a0f1bbc7732fea898c6980d3366abb7672c13d"
+    },
+    {
+      "template": "templates/INDEX.md",
+      "target": "docs/sdd/INDEX.md",
+      "template_hash": "30c2593e8ccf30af5b5d5c09ab9d360420e13c2544a2c14b284d4d7926f2ece5"
+    },
+    {
+      "template": "templates/wiki/index.template.md",
+      "target": "docs/wiki/index.md",
+      "template_hash": "7c065de21ad2703039fe6bda162a08beeb577ec0f652ef0bc1a0fabac99d352f"
+    },
+    {
+      "template": "templates/wiki/page.template.md",
+      "target": "docs/wiki/architecture-overview.md",
+      "template_hash": "a103b7cbecce4cab7afbe71698581ffe6f23e5c29dcc81663f73069e8e77e1cd"
+    },
+    {
+      "template": "guardrails/guard.conf.template",
+      "target": ".ai-init/hooks/guard.conf",
+      "template_hash": "f8ec8d27b17585ec8bec2e003ea5644aaac2a0387c8b5c323dcc35617bacdf30"
+    },
+    {
+      "template": "templates/agent-env/agent-setup.template.sh",
+      "target": ".ai-init/agent-setup.sh",
+      "template_hash": "61233f69c4703a49793b1c8fc2d836be1c0e3fbbc041ca0aedffe9db09bbd50c"
+    },
+    {
+      "template": "templates/harness/github-actions-ai-review.yml",
+      "target": ".github/workflows/ai-review.yml",
+      "template_hash": "e9e3236e63e47343fdd1ce60545b7b181bfab73b3330e223e26f071d6ccfa77e"
+    },
+    {
+      "template": "templates/agent-env/copilot-setup-steps.template.yml",
+      "target": ".github/workflows/copilot-setup-steps.yml",
+      "template_hash": "331d0c53f8b3d88327a71fa10d8e5dfcd546db78a96409b19a91b3e54796863f"
+    },
+    {
+      "template": "templates/harness/github-actions-doc-check.yml",
+      "target": ".github/workflows/doc-check.yml",
+      "template_hash": "af3f3da105e39e3df442b8b7347dbc3f2b815c54342f314d88f8daf27ebc3b0c"
+    }
+  ],
+  "modified_files": [],
+  "applied_migrations": [
+    "0001-spec-layout"
+  ]
+}
