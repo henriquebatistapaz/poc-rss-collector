@@ -6,8 +6,10 @@ Mini projeto Java privado para validar URLs e extrair links de feeds RSS e Atom.
 
 - Parser RSS 2.0 e Atom 1.0 com XML protegido contra DTD e entidades externas.
 - API `POST /v1/feeds/validate` que recebe uma URL e informa se a resposta é um feed RSS/Atom válido.
+- API para cadastrar e listar feeds, fazer refresh manual e consultar links coletados.
+- Normalização de links e deduplicação por feed e identidade do item.
 - Busca HTTP com timeout, tamanho máximo de resposta, limite de redirecionamentos e validação de destino público.
-- Sem persistência, agendamento ou adapters de origem.
+- Feeds e links ficam em memória; não há persistência durável nem atualização agendada.
 
 A validação comprova apenas a resposta disponível naquele momento; um feed pode mudar ou ficar indisponível depois.
 
@@ -24,6 +26,18 @@ mvn spring-boot:run
 
 Swagger UI: <http://localhost:8080/swagger-ui/index.html>
 OpenAPI JSON: <http://localhost:8080/v3/api-docs>
+
+## Cadastrar e atualizar feeds
+
+Cadastre um feed público válido. A resposta inclui um ID estável até o processo reiniciar:
+
+```bash
+curl -X POST http://localhost:8080/v1/feeds -H 'Content-Type: application/json' -d '{"feedUrl":"https://feeds.bbci.co.uk/news/rss.xml"}'
+```
+
+Consulte feeds e links com `GET /v1/feeds` e `GET /v1/links`. Links aceitam `feedId`, `from` e `to` como filtros; datas usam ISO-8601 UTC. Para atualizar um feed manualmente, use `POST /v1/feeds/{id}/refresh`. O refresh preserva a identidade dos itens, atualiza metadados e não duplica entradas.
+
+O armazenamento é limitado a 100 feeds e 1.000 links por feed e é volátil. Não exponha a API sem autenticação e controles operacionais; cadastro/refresh fazem requisições de saída a URLs fornecidas pelo cliente.
 
 ## Consultar se um link é um feed válido
 
@@ -72,6 +86,6 @@ O teste externo usa timeout e limite de 1 MB. Essas URLs também servem para ins
 
 ## Stack
 
-Java 21, Spring Boot, Maven, JUnit 5, Spring MVC e springdoc-openapi.
+Java 27, Spring Boot, Maven, JUnit 5, Spring MVC e springdoc-openapi.
 
 Veja [SPEC.md](SPEC.md) para escopo e decisões, e [TODO.md](TODO.md) para as próximas fatias.
