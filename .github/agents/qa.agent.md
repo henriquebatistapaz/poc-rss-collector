@@ -18,7 +18,7 @@ When reviewing a spec from `docs/sdd/`, assess:
 
 Format: findings classified `[BLOCKER]` / `[IMPORTANT]` / `[SUGGESTION]`, each with the proposed fix. Final verdict: SPEC READY FOR IMPLEMENTATION or REVISE SPEC.
 
-End with the next step: **REVISE** → "run `/fix-findings` to apply them to the spec (blockers are mandatory), then re-run me". **READY** → "human approval is next (docs/ONBOARDING.md, Gate 1); once approved: `/test-plan docs/sdd/specs/<name>/spec.md`".
+End with the next step: **REVISE** → "run `/fix-findings` to apply them to the spec (blockers are mandatory), then re-run me". **READY** → "human approval is next (docs/ONBOARDING.md, Gate 1); once approved: `/test-plan docs/sdd/<name>/spec.md`".
 
 ## 2. Implementation/MR review (testing lens)
 

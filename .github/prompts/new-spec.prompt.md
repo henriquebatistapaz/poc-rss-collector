@@ -36,7 +36,7 @@ Work through these areas **in rounds of at most 2-3 related questions** — neve
 
 ## Phase 3 — Write
 
-1. Draft `docs/sdd/specs/<YYYYMMDD>-<kebab-slug>/spec.md` (`<YYYYMMDD>` = today, `date +%Y%m%d`, fixed at creation — the directory is never renamed; `<kebab-slug>` = short kebab-case name; `<name>` below means this whole `<YYYYMMDD>-<kebab-slug>` directory name) filling every template section — including the **Complexity** field (S/M/L per the rubric; justify in half a line — it drives model routing later) — from the interview answers and Phase 1 facts. Decide **Security-sensitive** (yes if it touches a `SENSITIVE` glob in `.ai-init/hooks/guard.conf` or handles auth, authorization, personal data, payments, secrets/crypto, uploads, outbound URLs or infra); if yes, fill section 9.1 Threats concretely and turn every testable mitigation into an AC. Acceptance criteria must be testable; unresolved points become `[NEEDS CLARIFICATION]`.
+1. Draft `docs/sdd/<kebab-case-name>/spec.md` filling every template section — including the **Complexity** field (S/M/L per the rubric; justify in half a line — it drives model routing later) — from the interview answers and Phase 1 facts. Decide **Security-sensitive** (yes if it touches a `SENSITIVE` glob in `.ai-init/hooks/guard.conf` or handles auth, authorization, personal data, payments, secrets/crypto, uploads, outbound URLs or infra); if yes, fill section 9.1 Threats concretely and turn every testable mitigation into an AC. Acceptance criteria must be testable; unresolved points become `[NEEDS CLARIFICATION]`.
 2. Present the spec with a 5-line summary on top: problem, outcome, in/out of scope, the ACs, what's still open. The user reacts to the summary; the spec is the record.
 3. Register it in `docs/sdd/INDEX.md` with status **`Draft`** (the INDEX Status column is the cycle's state machine — see the legend there).
 
@@ -51,10 +51,10 @@ Do NOT create a per-spec prompt file — the generic cycle prompts (`/test-plan`
 
 ## Usage log — LAST ACTION, ALWAYS
 
-Append ONE line to `docs/sdd/specs/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
+Append ONE line to `docs/sdd/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
 
 ```bash
-echo "$(date -Iseconds) | /new-spec | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/specs/<name>/usage.log
+echo "$(date -Iseconds) | /new-spec | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/<name>/usage.log
 ```
 
 Estimates are fine — mark them with `~`. Input = context sent (files read, history); output = text/code generated. Don't know the model? Ask the user once per session. Do this even if the run was partial or blocked.

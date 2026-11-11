@@ -41,24 +41,24 @@ The issue may live somewhere other than this repository: another project, anothe
 5. Read `docs/sdd/constitution.md`, `docs/sdd/TEMPLATE.sdd.md` and the project's `AGENTS.md`.
 6. Translate the issue into the template: context/problem come from the description; functional requirements from the requested items; acceptance criteria must be **verifiable by automated test** whenever possible — they will drive the tests during implementation.
 7. Whatever the issue doesn't answer, ask the user BEFORE writing. Mark whatever remains open with `[NEEDS CLARIFICATION]`.
-8. Create `docs/sdd/specs/<YYYYMMDD>-<kebab-slug>/spec.md` (`<YYYYMMDD>` = today, `date +%Y%m%d`, fixed at creation — the directory is never renamed; `<kebab-slug>` = short kebab-case name; `<name>` below means this whole `<YYYYMMDD>-<kebab-slug>` directory name) — filling every template section, including the **Complexity** field (S/M/L; it drives model routing later) and the **Security-sensitive** field (if yes, fill 9.1 Threats and turn testable mitigations into ACs) — and register it in `docs/sdd/INDEX.md` with status **`Draft`**. In References, record the **full issue URL** (not just the number) — the issue may live outside this repo, and later steps need to find it. Do NOT create a per-spec prompt file — the generic cycle prompts take the SDD path as input.
+8. Create `docs/sdd/<kebab-case-name>/spec.md` — filling every template section, including the **Complexity** field (S/M/L; it drives model routing later) and the **Security-sensitive** field (if yes, fill 9.1 Threats and turn testable mitigations into ACs) — and register it in `docs/sdd/INDEX.md` with status **`Draft`**. In References, record the **full issue URL** (not just the number) — the issue may live outside this repo, and later steps need to find it. Do NOT create a per-spec prompt file — the generic cycle prompts take the SDD path as input.
 
 ## Wrap-up
 
 9. Do not implement anything. End your response with: **Next step →** run `/next` — it performs the QA review automatically and then waits for YOUR approval (Gate 1: set `Approved` in `docs/sdd/INDEX.md`, or reply "approved"). Optional: invoke `@qa` in a fresh chat for a more independent review.
 10. If the CLI is authenticated for that host, offer to comment on the issue with the SDD link:
    ```bash
-   glab issue note <id> -R <host>/<project> -m "SDD created: docs/sdd/specs/<name>/spec.md"   # GitLab
-   gh issue comment <full-url> --body "SDD created: docs/sdd/specs/<name>/spec.md"            # GitHub
+   glab issue note <id> -R <host>/<project> -m "SDD created: docs/sdd/<name>/spec.md"   # GitLab
+   gh issue comment <full-url> --body "SDD created: docs/sdd/<name>/spec.md"            # GitHub
    ```
 11. **If the issue lives outside this repository**, flag it in your closing note: `Closes #<id>` in the MR will NOT auto-close a cross-repo/cross-host issue — the person will have to close it manually (or add the platform-specific cross-project reference).
 
 ## Usage log — LAST ACTION, ALWAYS
 
-Append ONE line to `docs/sdd/specs/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
+Append ONE line to `docs/sdd/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
 
 ```bash
-echo "$(date -Iseconds) | /spec-from-issue | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/specs/<name>/usage.log
+echo "$(date -Iseconds) | /spec-from-issue | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/<name>/usage.log
 ```
 
 Estimates are fine — mark them with `~`. Input = context sent (files read, history); output = text/code generated. Don't know the model? Ask the user once per session. Do this even if the run was partial or blocked.
