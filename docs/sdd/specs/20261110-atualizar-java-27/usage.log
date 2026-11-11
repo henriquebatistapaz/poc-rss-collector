@@ -1,0 +1,4 @@
+2026-11-10T23:18:46-03:00 | /new-spec | model: gpt-6.1-sol | in: ~1900 | out: ~1500
+2026-11-10T23:21:09-03:00 | /next + @qa | REVISE SPEC | [BLOCKER] AC-02/§9.1: especificar fixtures com URL privada ou loopback, redirecionamento e XML malformado ou com entidade externa. Comparar rejeição e ausência de acesso indevido com o baseline e verificar os dois JARs. [IMPORTANT] §10/AC-04: identificar a revisão, imagem ou artefato anterior aplicável e o smoke a repetir após o retorno.
+2026-11-11T07:08:00-03:00 | /implement-spec | Java 27.0.1 + Maven 3.9.16, Boot 4.1.2: clean verify/install passou, 32 testes (0 falhas/erros, 1 smoke externo ignorado). Consumer runner/dashboard aprovado em build; Docker pendente.
+2026-11-11T07:15:00-03:00 | /test-plan | Plano de teste Java 27 consolidado com os resultados observados e os gates que aguardam Docker/produção.
