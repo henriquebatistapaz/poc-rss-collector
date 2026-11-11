@@ -27,7 +27,7 @@ Look for things that happened **more than once**:
 
 ## Record process errors — versioned, every time
 
-Every error from the cycle is recorded, whether or not it repeats. Honor the project versioning policy: default `"versioned": false`; commit in the configured private context repository, if any, rather than force-adding the record to the source project. Recurrence decides which PROPOSALS are made (below), not what gets written down.
+Every error from the cycle goes into a versioned file, whether or not it repeats. Recurrence decides which PROPOSALS are made (below), not what gets written down.
 
 Collect the errors from three sources: the merged MRs/PRs, the CI history, and the session itself (failed commands, reverted or amended commits, deploy failures, corrections the human made to agent work).
 
@@ -38,7 +38,7 @@ Write `retro/<YYYY-MM-DD>-<slug>.md` at the project root (create the folder if a
 
 Group the rows by area (git, environment, tests, deploy, process). Add a **Pendências** section for anything still open, and a **Lições** section with the numbered rules.
 
-The location does not bypass versioning policy: `retro/` is ignored by default too. With authorized external storage, ensure this path is linked to the private context repository before writing; otherwise report that the record is local. Never force-add it or change `versioned` to true automatically.
+Why root and not `docs/`: older installs put `/docs/` in `.gitignore`, so a record there could silently never reach the repo. The root works in every project. (New installs always version `docs/`.)
 
 Never rewrite a retro from a previous date; create a new file.
 

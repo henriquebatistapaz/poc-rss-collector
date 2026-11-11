@@ -4,7 +4,7 @@ description: "Validate an implementation against its spec: acceptance criteria, 
 
 # Validate implementation
 
-Validate the implementation of: ${input:sdd:Path to the spec (docs/sdd/specs/<name>/spec.md)}
+Validate the implementation of: ${input:sdd:Path to the spec (docs/sdd/<name>/spec.md)}
 
 This is the quality gate. It changes nothing and ships nothing — it produces a verdict. Shipping is `/open-mr`, which should only run after this passes.
 
@@ -12,7 +12,7 @@ This is the quality gate. It changes nothing and ships nothing — it produces a
 
 1. **Acceptance criteria** — read the spec and confirm EACH AC one by one, citing evidence (test name, endpoint, file/line). An AC without evidence is not met. Report as a checklist: AC → status → evidence.
 2. **Build and tests** — run the build+test command from `AGENTS.md` for the affected modules. Report the actual result; a failing suite ends the validation here.
-3. **Test plan coverage** — if `docs/sdd/specs/<name>/test-plan.md` exists, check the planned tests exist and run. List gaps.
+3. **Test plan coverage** — if `docs/sdd/<name>/test-plan.md` exists, check the planned tests exist and run. List gaps.
 4. **Code review** — apply the `reviewer` agent's criteria (`.github/agents/reviewer.agent.md`).
 5. **Design review** — for bug fixes and design-heavy changes, apply the `architect` agent's criteria: root cause vs symptom, complexity, design fit.
 6. **Test quality** — apply the `qa` agent's implementation lens: does every AC have a test asserting behavior (not just "no exception")? Negative scenarios covered?
@@ -38,14 +38,14 @@ This is the quality gate. It changes nothing and ships nothing — it produces a
 
 ## Usage log — LAST ACTION, ALWAYS
 
-Append ONE line to `docs/sdd/specs/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
+Append ONE line to `docs/sdd/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
 
 ```bash
-echo "$(date -Iseconds) | /validate-implementation | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/specs/<name>/usage.log
+echo "$(date -Iseconds) | /validate-implementation | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/<name>/usage.log
 ```
 
 Estimates are fine — mark them with `~`. Input = context sent (files read, history); output = text/code generated. Don't know the model? Ask the user once per session.
 
 ## Next step
 
-**READY TO SHIP** → `/open-mr docs/sdd/specs/<name>/spec.md`. **NOT READY** → `/fix-findings` applies the blockers (say which of the `[IMPORTANT]` ones you also want), then re-run `/validate-implementation`.
+**READY TO SHIP** → `/open-mr docs/sdd/<name>/spec.md`. **NOT READY** → `/fix-findings` applies the blockers (say which of the `[IMPORTANT]` ones you also want), then re-run `/validate-implementation`.

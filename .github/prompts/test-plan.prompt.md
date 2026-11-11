@@ -15,7 +15,7 @@ Generate the test plan for: ${input:sdd:Path to the SDD in docs/sdd/ (or an MR/d
    - **API/contract** — endpoints: status codes, payload, authentication
    - **Manual exploratory** — what isn't worth automating
 3. Add the standard negative scenarios the SDD didn't mention: empty/null/malformed input, external dependency down/timeout, invalid credentials, duplicate message (idempotency), unexpected payload.
-4. Produce the plan as the SDD's paired file (`docs/sdd/specs/<name>/test-plan.md`) containing:
+4. Produce the plan as the SDD's paired file (`docs/sdd/<name>/test-plan.md`) containing:
    - Table: AC → layer → proposed test name → status (existing/to create)
    - List of additional negative/edge tests
    - **Exploratory script**: numbered manual steps, environment preconditions and expected result
@@ -31,14 +31,14 @@ Generate the test plan for: ${input:sdd:Path to the SDD in docs/sdd/ (or an MR/d
 
 ## Usage log — LAST ACTION, ALWAYS
 
-Append ONE line to `docs/sdd/specs/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
+Append ONE line to `docs/sdd/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
 
 ```bash
-echo "$(date -Iseconds) | /test-plan | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/specs/<name>/usage.log
+echo "$(date -Iseconds) | /test-plan | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/<name>/usage.log
 ```
 
 Estimates are fine — mark them with `~`. Input = context sent (files read, history); output = text/code generated. Don't know the model? Ask the user once per session. Do this even if the run was partial or blocked.
 
 ## Next step
 
-End your response with: **Next step →** `/implement-spec docs/sdd/specs/<name>/spec.md` (the implementation will follow this plan, tests first).
+End your response with: **Next step →** `/implement-spec docs/sdd/<name>/spec.md` (the implementation will follow this plan, tests first).

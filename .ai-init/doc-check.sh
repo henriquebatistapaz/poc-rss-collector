@@ -18,8 +18,7 @@ set -uo pipefail
 
 RUN=0; [ "${1:-}" = --run ] && RUN=1
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-# Prefer the caller's checkout because .ai-init can be centrally symlinked.
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || git -C "$HERE" rev-parse --show-toplevel 2>/dev/null || (cd "$HERE/.." && pwd -P))"
+ROOT="$(git -C "$HERE" rev-parse --show-toplevel 2>/dev/null || (cd "$HERE/.." && pwd -P))"
 cd "$ROOT" || exit 2
 AGENTS="AGENTS.md"
 [ -f "$AGENTS" ] || { echo "doc-check: no AGENTS.md at $ROOT" >&2; exit 1; }
@@ -117,16 +116,7 @@ command_lines() {
     fence && sh { print }' "$AGENTS"
 }
 
-package_files() { find . -maxdepth 4 -path '*/node_modules' -prune -o -name package.json -type f -print 2>/dev/null; }
-has_package_json() { [ -f package.json ] || [ -n "$(package_files | head -n1)" ]; }
-has_pkg_script() {
-  [ -f package.json ] && grep -Eq "\"$1\"[[:space:]]*:" package.json && return 0
-  local f
-  while IFS= read -r f; do grep -Eq "\"$1\"[[:space:]]*:" "$f" && return 0; done <<EOF
-$(package_files)
-EOF
-  return 1
-}
+has_pkg_script() { [ -f package.json ] && grep -Eq "\"$1\"[[:space:]]*:" package.json; }
 compose_file() { local f; for f in compose.yaml compose.yml docker-compose.yaml docker-compose.yml; do [ -f "$f" ] && return 0; done; return 1; }
 
 check_segment() {   # one simple command (no && | ;)
@@ -145,12 +135,12 @@ check_segment() {   # one simple command (no && | ;)
         case "$arg" in -*) continue ;; *.sh|*.py|*.js|*.mjs|*.ps1) [ -e "$arg" ] || err "AGENTS.md: \`$w1 $arg\` — script does not exist"; break ;; *) break ;; esac
       done ;;
     npm|pnpm|yarn|bun)
-      has_package_json || { err "AGENTS.md: \`$w1 …\` but there is no package.json"; return; }
+      [ -f package.json ] || { err "AGENTS.md: \`$w1 …\` but there is no package.json"; return; }
       case "$w2" in
         run|run-script) [ -z "$w3" ] || has_pkg_script "$w3" || err "AGENTS.md: \`$w1 run $w3\` — no \"$w3\" script in package.json" ;;
         test|start)     has_pkg_script "$w2" || err "AGENTS.md: \`$w1 $w2\` — no \"$w2\" script in package.json" ;;
       esac ;;
-    npx) has_package_json || warn "AGENTS.md: \`npx $w2\` without a package.json (downloads on every run)" ;;
+    npx) [ -f package.json ] || warn "AGENTS.md: \`npx $w2\` without a package.json (downloads on every run)" ;;
     make) [ -f Makefile ] || [ -f makefile ] || [ -f GNUmakefile ] || { err "AGENTS.md: \`make\` but there is no Makefile"; return; }
           case "$w2" in ''|-*) ;; *) grep -Eq "^$w2[[:space:]]*:" Makefile makefile GNUmakefile 2>/dev/null || err "AGENTS.md: \`make $w2\` — no \"$w2\" target in the Makefile" ;; esac ;;
     mvn|mvnd) [ -f pom.xml ] || err "AGENTS.md: \`$w1\` but there is no pom.xml"

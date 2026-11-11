@@ -27,7 +27,7 @@ Coverage: read the latest value from the CI artifacts/reports (JaCoCo/coverage.x
 | CI health | % red pipelines on first run of an MR/PR | does "green local" predict "green CI"? |
 | Coverage trend | current vs floor vs last period | is the safety net growing or eroding? |
 | Review depth | median human comments per MR/PR | rubber-stamping check: near zero = the human gate is degrading |
-| AI cost per spec | aggregate `docs/sdd/specs/*/usage.log`: runs, models used, est. input vs output tokens per spec | which features cost most AI effort; model mix over time. Report input and output separately (different pricing) — estimates, not billing data |
+| AI cost per spec | aggregate `docs/sdd/*/usage.log`: runs, models used, est. input vs output tokens per spec | which features cost most AI effort; model mix over time. Report input and output separately (different pricing) — estimates, not billing data |
 | AI overhead cost | `docs/sdd/usage.log` (project-level): setup, retro/metrics/tech-debt runs | what the process itself costs, apart from feature work |
 | Routing adherence | usage.log model column vs the AGENTS.md routing table for each spec's Complexity | is the team using heavy models on S-specs (waste) or light models on L-specs (risk)? |
 

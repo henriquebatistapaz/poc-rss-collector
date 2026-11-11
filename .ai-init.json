@@ -1,5 +1,5 @@
 {
-  "ai_version": "fc05cc8",
+  "ai_version": "27d3a11",
   "profile": "project",
   "installed_at": "2026-11-06",
   "stack": "Java 27, Maven, Spring Boot 4.1.2",
@@ -10,42 +10,42 @@
     {
       "source": "prompts/fix-findings.prompt.md",
       "target": ".github/prompts/fix-findings.prompt.md",
-      "hash": "7a689f3a42608cf9b40cb5a03907125890a35b36f47f3455714f0326a5570a46"
+      "hash": "79efe464077038ba334976c4deac663519b2082176978f52df221772a7b3f036"
     },
     {
       "source": "prompts/implement-spec.prompt.md",
       "target": ".github/prompts/implement-spec.prompt.md",
-      "hash": "d2c9058b907cf1db505a5d646961126b44716f1678f83181e64e7208c4205399"
+      "hash": "fa0c973e76d94b2ce1f00f3b539f74af09689b807c908224e1634b9166f564cd"
     },
     {
       "source": "prompts/metrics.prompt.md",
       "target": ".github/prompts/metrics.prompt.md",
-      "hash": "e6e16cb66252967e8d6c91e65c209b67e63f694fa91b61f63a552085aba74920"
+      "hash": "807bdffb2df644a531082b80c1cb81f298d75ccfe8dead1072562518f455b5bc"
     },
     {
       "source": "prompts/new-spec.prompt.md",
       "target": ".github/prompts/new-spec.prompt.md",
-      "hash": "a9c2c0bf32ca8de378d1d71e73c703ecb979e016c26f8a31189e74f268efdd14"
+      "hash": "3d676657300859e700635fedc8821fa1e5cc607a0b8765e0fae2a3daf395687b"
     },
     {
       "source": "prompts/next.prompt.md",
       "target": ".github/prompts/next.prompt.md",
-      "hash": "36b497934df6ba60c0a2cdd6290adc8e377fcb04a655d0c7601215848c9b507d"
+      "hash": "73cbd8a8ba1017a05b358455f26d9bbfc038a3bf03b8aff2064ced180497687c"
     },
     {
       "source": "prompts/open-mr.prompt.md",
       "target": ".github/prompts/open-mr.prompt.md",
-      "hash": "94a3ebb31f8386ed0d443ef23443cbbc1b07daf3d21c9e795e28734d34aca5b6"
+      "hash": "d43996ec05c37a145cb262a062b6ca7495b5e3814ea3d2facb23263dfd3094f8"
     },
     {
       "source": "prompts/retro.prompt.md",
       "target": ".github/prompts/retro.prompt.md",
-      "hash": "e07ff837141b857abfd35c978066f09cbae85d7547622a5f770d2a2c4f535f7f"
+      "hash": "7de08bab55b4c3de841155c1674ac832e5177c89851777a9b93ed7425387fefc"
     },
     {
       "source": "prompts/spec-from-issue.prompt.md",
       "target": ".github/prompts/spec-from-issue.prompt.md",
-      "hash": "841d5b17ad57041c6d2c0dac64d10f11670b47a3ca36ef0b13da7aa56c2f63cc"
+      "hash": "c893ff5e60ecf2944b0209c2f01ad276f2678b6b1ef17935a83c58d59100635c"
     },
     {
       "source": "prompts/tech-debt.prompt.md",
@@ -55,12 +55,12 @@
     {
       "source": "prompts/test-plan.prompt.md",
       "target": ".github/prompts/test-plan.prompt.md",
-      "hash": "ebb1c8a833b98577358bd9308a1cf867bd278515ec016a36f5dc9fb9c837535d"
+      "hash": "d012e3aa4a4d18a17133e8fd7ea5c708648a5118c6b5bf1cd367a346da4fc2c4"
     },
     {
       "source": "prompts/validate-implementation.prompt.md",
       "target": ".github/prompts/validate-implementation.prompt.md",
-      "hash": "d0d22e4c0265a3fd40afcc3aa3b0d9d28751939f8a30ab2810e0bbfb46e5db27"
+      "hash": "3f75b8c32bf10cf572136e3faf8becef851a6ed3b6252f8e27c5713a3a6ed2cd"
     },
     {
       "source": "agents/reviewer.agent.md",
@@ -70,7 +70,7 @@
     {
       "source": "agents/qa.agent.md",
       "target": ".github/agents/qa.agent.md",
-      "hash": "5ca345606d3434efb33ed308842584c391d9a28dc46e585b588191c19ee66559"
+      "hash": "fed31c2a5fbf947cecf63c1bfd6be7b6ede7fe472547ac8328d23b8573cd05ec"
     },
     {
       "source": "agents/architect.agent.md",
@@ -120,12 +120,12 @@
     {
       "source": "guardrails/guard.sh",
       "target": ".ai-init/hooks/guard.sh",
-      "hash": "0625cd9128bb77e5a2d530c8de4a2f47dee78b8a3b5e1d4d296c2cb6084aaae8"
+      "hash": "5ee6c4e0d0587201c905a53e718f6a6a5a58a3c890bb2b4d080047ebb64426a5"
     },
     {
       "source": "prompts/ci-review.prompt.md",
       "target": ".github/prompts/ci-review.prompt.md",
-      "hash": "8c0a8166fe678ebbc9be92009a93d4daf3f6cdf6e6ca1e32902773948c96a34e"
+      "hash": "3562846f8654cc874c2a5e3d837b09a966d4085b40bd4b1bf62dabdf87577d4a"
     },
     {
       "source": "agents/security.agent.md",
@@ -135,7 +135,7 @@
     {
       "source": "automation/doc-check.sh",
       "target": ".ai-init/doc-check.sh",
-      "hash": "276a1c85dd7f55ca997c4a9d851fcd5a1595309a4e74f1623b063cf06990b735"
+      "hash": "bc09b8f2537e057bafcff67ce6b194b2857b08cf11a7dfaa7cfdd4bab464fc6e"
     }
   ],
   "generated_files": [
