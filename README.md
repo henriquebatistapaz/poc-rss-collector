@@ -86,6 +86,6 @@ O teste externo usa timeout e limite de 1 MB. Essas URLs também servem para ins
 
 ## Stack
 
-Java 21, Spring Boot, Maven, JUnit 5, Spring MVC e springdoc-openapi.
+Java 27, Spring Boot 4.1.2, Maven, JUnit 5, Spring MVC e springdoc-openapi.
 
 Veja [SPEC.md](SPEC.md) para escopo e decisões, e [TODO.md](TODO.md) para as próximas fatias.
