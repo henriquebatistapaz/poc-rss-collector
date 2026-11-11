@@ -4,7 +4,7 @@ description: "Implement a feature from an approved SDD, validating against the a
 
 # Implement SDD
 
-Implement the spec: ${input:sdd:Path to the SDD, docs/sdd/specs/<YYYYMMDD>-<slug>/spec.md}
+Implement the spec: ${input:sdd:Path to the SDD in docs/sdd/}
 
 ## Steps
 
@@ -25,14 +25,14 @@ Implement the spec: ${input:sdd:Path to the SDD, docs/sdd/specs/<YYYYMMDD>-<slug
 
 ## Usage log — LAST ACTION, ALWAYS
 
-Append ONE line to `docs/sdd/specs/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
+Append ONE line to `docs/sdd/<name>/usage.log` (create if absent). **Append, never rewrite** — prior lines are history:
 
 ```bash
-echo "$(date -Iseconds) | /implement-spec | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/specs/<name>/usage.log
+echo "$(date -Iseconds) | /implement-spec | model: <model used in this chat> | in: ~<input tokens> | out: ~<output tokens>" >> docs/sdd/<name>/usage.log
 ```
 
 Estimates are fine — mark them with `~`. Input = context sent (files read, history); output = text/code generated. Don't know the model? Ask the user once per session. Do this even if the run was partial or blocked.
 
 ## Next step
 
-When all ACs pass, end your response with: **Next step →** `/validate-implementation docs/sdd/specs/<name>/spec.md` (the quality gate; shipping comes after). If blocked instead, state exactly what is blocking and who can unblock it.
+When all ACs pass, end your response with: **Next step →** `/validate-implementation docs/sdd/<name>/spec.md` (the quality gate; shipping comes after). If blocked instead, state exactly what is blocking and who can unblock it.

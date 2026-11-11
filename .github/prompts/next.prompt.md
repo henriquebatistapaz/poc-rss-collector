@@ -17,7 +17,7 @@ git log --oneline -5
 - Latest `/validate-implementation` verdict in this session, if any.
 - Open MRs/PRs: `glab mr list` / `gh pr list` — waiting on review? CI red?
 - `docs/metrics/`, `docs/tech-debt/` — reports overdue (monthly / quarterly)?
-- `.ai-init.json` (or legacy `.ai-start.json` / `.ai-ready.json`) — assets version vs the current ai-init repo tag.
+- `.ai-init.json` (or legacy `.ai-ready.json`) — assets version vs the current ai-init repo tag.
 
 **Which spec is "the" spec:** the one touched by the current branch or the most recently modified under `docs/sdd/`. If two are plausibly active, ask which one — once — instead of guessing.
 
@@ -54,7 +54,7 @@ Read the corresponding prompt file in `.github/prompts/` and follow it fully —
 - **Ask one short question first**: `/implement-spec` (long and expensive) and `/open-mr` (pushes a branch and creates an MR/PR). State what you'll do and wait for a yes.
 - **Never cross a human gate**: never set `Approved` in INDEX.md on your own initiative (only on an explicit "approved" from the user in this conversation), never merge, never apply non-blocking findings without being told, never `--force` anything.
 - **Every STOP names the exact human action that unblocks it** — a stop without "here's what you do" is a dead end, and dead ends are bugs.
-- Announce before each step in one line ("Spec approved, no test plan → running /test-plan for docs/sdd/specs/20261106-x/spec.md"), so the flow stays visible even when automatic.
+- Announce before each step in one line ("Spec approved, no test plan → running /test-plan for docs/sdd/x/spec.md"), so the flow stays visible even when automatic.
 - **Model routing**: read the spec's Complexity (S/M/L) and the routing table in AGENTS.md. If the recommended tier for the next step differs from the current model, say so BEFORE running: "This is an L-complexity implementation — recommend switching to <heavy tier> in the model picker; continue here anyway?" (you cannot switch models yourself). For steps where the current model already fits, say nothing — recommend only when the change matters.
 - Every step you run still does its own thing — including appending to `usage.log`.
 

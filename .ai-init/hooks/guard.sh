@@ -28,9 +28,7 @@ while [ $# -gt 0 ]; do
 done
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-# Prefer the caller's checkout: .ai-init is centrally symlinked, so resolving HERE
-# physically would otherwise select the ai-init-internal repository instead.
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || git -C "$HERE" rev-parse --show-toplevel 2>/dev/null || (cd "$HERE/../.." && pwd -P))"
+ROOT="$(git -C "$HERE" rev-parse --show-toplevel 2>/dev/null || (cd "$HERE/../.." && pwd -P))"
 ROOT="$(cd "$ROOT" && pwd -P)"
 cd "$ROOT" || exit 0
 
