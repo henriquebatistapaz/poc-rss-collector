@@ -10,8 +10,8 @@
 
 ## Next small slices
 
-- [ ] Add dedicated HTTP fetcher tests for redirects, size caps, DNS changes, and network failures.
-- [ ] Add link normalization and duplicate identity rules.
-- [ ] Decide whether feed validation needs persistence.
-- [ ] Add feed registration and refresh endpoints after parser contracts stabilize.
+- [x] Add dedicated HTTP fetcher tests for redirects, size caps, DNS changes, and network failures.
+- [x] Normalize article links by removing fragments and known tracking parameters while preserving functional query parameters; deduplicate by feed and item ID.
+- [x] Keep registered feeds and collected links in bounded in-memory storage for this slice; durable persistence remains deferred.
+- [x] Add feed registration, listing, manual refresh, and collected-link endpoints after parser contracts stabilized.
 - [ ] Revisit ActiveMQ Classic only if refresh jobs need reliable asynchronous delivery; consider Kafka only for replay or multiple consumers.
