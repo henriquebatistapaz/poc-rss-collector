@@ -1,0 +1,28 @@
+# Doc freshness — applied by the ai-init agent (Phase 4).
+# Target file: .github/workflows/doc-check.yml
+# Fails the PR when AGENTS.md, docs/wiki/ or docs/ONBOARDING.md point at files that don't exist,
+# or when an AGENTS.md command names a script, npm script, make target or build file that isn't there.
+# The weekly run catches drift that no single PR introduced (a renamed module, a deleted script).
+# [agent] Make `doc-check` a required status check (platform protection step).
+
+name: Doc check
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  doc-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: AGENTS.md and wiki describe the repo as it is
+        run: bash .ai-init/doc-check.sh
+      # [agent] Optional: also EXECUTE the AGENTS.md commands marked `# doc-check: run`.
+      # Needs the runtime (same setup as ci.yml) — keep it only for fast, side-effect-free commands.
+      # - run: bash .ai-init/doc-check.sh --run

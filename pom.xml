@@ -17,9 +17,9 @@
     <name>RSS Collector Mini</name>
     <description>Private mini project specification for collecting links from RSS and Atom feeds</description>
 
-    <properties>
+    <properties><mockito.version>5.24.0</mockito.version><byte-buddy.version>1.18.17</byte-buddy.version>
         <java.version>27</java.version>
-
+    
     <springdoc-openapi-starter-webmvc-ui.version>3.2.0</springdoc-openapi-starter-webmvc-ui.version>
   </properties>
 
@@ -36,6 +36,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
