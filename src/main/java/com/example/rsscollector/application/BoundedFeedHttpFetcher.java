@@ -4,8 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Performs a bounded public-feed GET with manual redirect checks. */
@@ -15,9 +16,16 @@ public class BoundedFeedHttpFetcher implements FeedDocumentFetcher {
     private static final int MAX_REDIRECTS = 3;
     private static final int TIMEOUT_MILLIS = 5_000;
     private final RssFeedLinkValidator linkValidator;
+    private final HttpConnectionFactory connectionFactory;
 
+    @Autowired
     public BoundedFeedHttpFetcher(RssFeedLinkValidator linkValidator) {
+        this(linkValidator, uri -> (HttpURLConnection) uri.toURL().openConnection());
+    }
+
+    BoundedFeedHttpFetcher(RssFeedLinkValidator linkValidator, HttpConnectionFactory connectionFactory) {
         this.linkValidator = linkValidator;
+        this.connectionFactory = Objects.requireNonNull(connectionFactory);
     }
 
     @Override
@@ -28,14 +36,11 @@ public class BoundedFeedHttpFetcher implements FeedDocumentFetcher {
             if (!linkValidator.resolvesOnlyToPublicAddresses(currentUrl)) {
                 throw new IOException("Feed URL resolves to a non-public or invalid destination");
             }
-            URLConnection raw = current.toURL().openConnection();
-            raw.setConnectTimeout(TIMEOUT_MILLIS);
-            raw.setReadTimeout(TIMEOUT_MILLIS);
-            raw.setRequestProperty("Accept", "application/atom+xml, application/rss+xml, application/xml, text/xml;q=0.9");
-            raw.setRequestProperty("User-Agent", "MultiSourceFeedValidator/0.1 (+public-feed-check)");
-            if (!(raw instanceof HttpURLConnection connection)) {
-                throw new IOException("Only HTTP(S) feed URLs are supported");
-            }
+            HttpURLConnection connection = connectionFactory.open(current);
+            connection.setConnectTimeout(TIMEOUT_MILLIS);
+            connection.setReadTimeout(TIMEOUT_MILLIS);
+            connection.setRequestProperty("Accept", "application/atom+xml, application/rss+xml, application/xml, text/xml;q=0.9");
+            connection.setRequestProperty("User-Agent", "MultiSourceFeedValidator/0.1 (+public-feed-check)");
             connection.setInstanceFollowRedirects(false);
             try {
                 int status = connection.getResponseCode();
@@ -69,5 +74,10 @@ public class BoundedFeedHttpFetcher implements FeedDocumentFetcher {
             }
         }
         throw new IOException("Feed redirect limit exceeded");
+    }
+
+    @FunctionalInterface
+    interface HttpConnectionFactory {
+        HttpURLConnection open(URI uri) throws IOException;
     }
 }
