@@ -4,7 +4,7 @@ API Spring Boot para validar feeds públicos e extrair links. O projeto também 
 
 ## Validação local
 
-Use JDK 21 e Maven 3.9. Execute os comandos a partir da raiz do repositório.
+Use JDK 27 e Maven 3.9. Execute os comandos a partir da raiz do repositório.
 
 ```sh
 mvn clean verify
