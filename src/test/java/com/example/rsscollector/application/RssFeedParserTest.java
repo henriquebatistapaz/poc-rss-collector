@@ -52,6 +52,29 @@ class RssFeedParserTest {
     }
 
     @Test
+    void removesTrackingParametersAndDeduplicatesByFeedAndItemIdentity() {
+        String xml = """
+                <rss version="2.0"><channel>
+                  <item><guid>story-1</guid><title>First version</title>
+                    <link>HTTPS://Example.ORG:443/news?id=1&amp;utm_source=mail#top</link></item>
+                  <item><guid>story-1</guid><title>Duplicate identity</title>
+                    <link>https://example.org/other</link></item>
+                  <item><title>Same canonical link</title>
+                    <link>https://example.org/news?id=1&amp;fbclid=tracking</link></item>
+                  <item><title>Duplicate fallback link</title>
+                    <link>https://example.org/news?id=1&amp;utm_medium=email</link></item>
+                </channel></rss>
+                """;
+
+        List<FeedItem> items = parser.parse("https://feeds.example.org/feed.xml", xml);
+
+        assertEquals(2, items.size());
+        assertEquals("https://example.org/news?id=1", items.getFirst().link().toString());
+        assertEquals("https://example.org/news?id=1", items.getLast().link().toString());
+        assertEquals("First version", items.getFirst().title());
+    }
+
+    @Test
     void rejectsMalformedDocumentsAndUnsafeXml() {
         assertThrows(IllegalArgumentException.class,
                 () -> parser.parse("https://feeds.example.org/feed", "<rss version='2.0'/ >"));
