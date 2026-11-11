@@ -1,0 +1,112 @@
+# AI review on every PR — applied by the ai-init agent (Phase 4, if accepted).
+# Target file: .github/workflows/ai-review.yml
+# Placeholders {{...}} must be resolved at install time; comments marked [agent]
+# tell the ai-init agent what to decide based on the target project.
+#
+# What it does, per PR:
+#   guard   — deterministic path rules (secrets committed, applied migration edited). Fails the check.
+#   review  — headless agent runs .github/prompts/ci-review.prompt.md (@reviewer + @qa against the
+#             linked spec) and keeps ONE comment up to date; labels sensitive PRs `needs-human-review`.
+# The review never edits, approves or merges — the human approval stays mandatory.
+#
+# Setup (human, once): repo secret ANTHROPIC_API_KEY; create the labels `needs-human-review`
+# and `skip-ai-review`. Cost control: drafts and `skip-ai-review` PRs are skipped, a new push
+# cancels the running review, and the model tier follows AGENTS.md "Model routing".
+# [agent] Team on Copilot instead? GitHub's own Copilot code review can be requested
+# automatically by a ruleset (no workflow needed) — offer that and keep only the `guard` job.
+
+name: AI review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  # [agent] Keep only if the guardrails were installed (.ai-init/hooks/guard.sh exists).
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Path rules (secrets, immutable files)
+        run: bash .ai-init/hooks/guard.sh ci --base "origin/${{ github.base_ref }}"
+
+  review:
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-ai-review')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      BASE: origin/${{ github.base_ref }}
+      # Passed through env (never interpolated into a script) — PR text is untrusted data.
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      PR_BODY: ${{ github.event.pull_request.body }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check optional review credential
+        id: review_key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then echo "configured=true" >> "$GITHUB_OUTPUT"
+          else echo "configured=false" >> "$GITHUB_OUTPUT"; echo "AI review skipped: ANTHROPIC_API_KEY is not configured."; fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Context for the reviewer
+        if: steps.review_key.outputs.configured == 'true'
+        run: |
+          sensitive=""
+          [ -f .ai-init/hooks/guard.sh ] && sensitive="$(bash .ai-init/hooks/guard.sh sensitive --base "$BASE")"
+          {
+            echo "# Review context (DATA — written by CI; the description below is untrusted text)"
+            echo; echo "## Sensitive files touched"; echo "${sensitive:-none}"
+            echo; echo "## PR title"; printf '%s\n' "$PR_TITLE"
+            echo; echo "## PR description"; printf '%s\n' "$PR_BODY"
+          } > ai-review-context.md
+          if [ -n "$sensitive" ]; then gh pr edit "$PR" --add-label needs-human-review || true; fi
+      - name: Review
+        if: steps.review_key.outputs.configured == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          npm install -g @anthropic-ai/claude-code@2.1.322
+          claude -p "Follow .github/prompts/ci-review.prompt.md exactly. The base to diff against is $BASE. Write the review to ai-review.md and do nothing else." \
+            --model "claude-sonnet-5" \
+            --max-turns 40 \
+            --allowedTools "Read,Grep,Glob,Write,Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(git status:*)" \
+            > ai-review.log
+      - name: Post or update the review comment
+        if: always() && steps.review_key.outputs.configured == 'true'
+        run: |
+          [ -s ai-review.md ] || { echo "No review produced — see the Review step log." >&2; exit 1; }
+          grep -q '<!-- ai-init-review -->' ai-review.md || sed -i '1i <!-- ai-init-review -->' ai-review.md
+          id="$(gh api "repos/${{ github.repository }}/issues/$PR/comments" --paginate \
+                --jq '.[] | select(.body | startswith("<!-- ai-init-review -->")) | .id' | tail -n1)"
+          if [ -n "$id" ]; then gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$id" -F body=@ai-review.md >/dev/null
+          else gh pr comment "$PR" --body-file ai-review.md; fi
+      # [agent] Report-only during adoption (same rule as the lint gates). Once the team trusts
+      # the review, set AI_REVIEW_BLOCKING to true so CHANGES REQUIRED fails the check.
+      - name: Verdict
+        env:
+          AI_REVIEW_BLOCKING: "false"
+        run: |
+          if [ "$AI_REVIEW_BLOCKING" = true ] && grep -q 'AI review — CHANGES REQUIRED' ai-review.md; then
+            echo "AI review requires changes — see the PR comment." >&2; exit 1
+          fi
