@@ -20,9 +20,9 @@ Rules: agents NEVER set `Approved`. A spec that needs rework after approval goes
 | [`20261106-jar-biblioteca/`](specs/20261106-jar-biblioteca/spec.md) | — | Done | Build gera jar comum (biblioteca) e executável -exec |
 | [`20261106-renomeacao-rss-collector-mini/`](specs/20261106-renomeacao-rss-collector-mini/spec.md) | — | Done | Renomeação do projeto/pacotes e referências ao poc-dashboard |
 | [`20261106-versoes-maven-em-properties/`](specs/20261106-versoes-maven-em-properties/spec.md) | — | Done | Versões de dependências centralizadas em properties |
-| [`20261106-testes-do-fetcher-http/`](specs/20261106-testes-do-fetcher-http/spec.md) | — | In progress | Implementado em `codex/rss-java27`; `mvn -B clean verify` passou com 32 testes no JDK 27.0.1.0.3 em 2026-11-11 (um smoke externo permanece ignorado) |
-| [`20261106-normalizacao-e-identidade-de-links/`](specs/20261106-normalizacao-e-identidade-de-links/spec.md) | — | In progress | Canonicalização remove fragmentos e parâmetros de rastreamento; identidade por feed/id ou URL normalizada |
-| [`20261106-cadastro-e-refresh-de-feeds/`](specs/20261106-cadastro-e-refresh-de-feeds/spec.md) | — | In progress | Cadastro/listagem e refresh manual concluídos no branch local `codex/rss-java27` |
+| [`20261106-testes-do-fetcher-http/`](specs/20261106-testes-do-fetcher-http/spec.md) | — | Done | Implementado e validado com BoundedFeedHttpFetcherTest |
+| [`20261106-normalizacao-e-identidade-de-links/`](specs/20261106-normalizacao-e-identidade-de-links/spec.md) | — | Done | Canonicalização e normalização validadas com RssFeedLinkNormalizerTest |
+| [`20261106-cadastro-e-refresh-de-feeds/`](specs/20261106-cadastro-e-refresh-de-feeds/spec.md) | — | Done | Cadastro/listagem e refresh concluídos no commit ca066ce |
 | [`20261106-ai-init-adocao-v2/`](specs/20261106-ai-init-adocao-v2/spec.md) | — | Done | Guardrails e adoção v2 validados localmente (doc-check, hooks e workflows) |
-| [`20261110-atualizar-java-27/`](specs/20261110-atualizar-java-27/spec.md) | — | In progress | JDK 27.0.1.0.3, Boot 4.1.2; `mvn -B clean verify` passou com 32 testes (1 smoke externo ignorado) em 2026-11-11; branch local |
+| [`20261110-atualizar-java-27/`](specs/20261110-atualizar-java-27/spec.md) | — | Done | JDK 27.0.1.0.3, Boot 4.1.2; 32 testes passando no commit 234d85d / develop |
 | [`20261119-padronizar-maven-wrapper/`](specs/20261119-padronizar-maven-wrapper/spec.md) | — | Done | Spec filha da macro 20261119-padronizar-maven-wrapper; wrapper Maven para 1 POM(s), sem alterar JDK ou comportamento. |
