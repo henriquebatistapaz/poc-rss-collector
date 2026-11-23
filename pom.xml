@@ -18,6 +18,7 @@
     <description>Private mini project specification for collecting links from RSS and Atom feeds</description>
 
     <properties><mockito.version>5.24.0</mockito.version><byte-buddy.version>1.18.17</byte-buddy.version>
+        <lombok.version>1.18.48</lombok.version>
         <java.version>27</java.version>
     
     <springdoc-openapi-starter-webmvc-ui.version>3.2.0</springdoc-openapi-starter-webmvc-ui.version>
@@ -47,6 +48,13 @@
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -57,6 +65,19 @@
                 <configuration>
                     <!-- Keep the plain jar as the main artifact so poc-dashboard can depend on it. -->
                     <classifier>exec</classifier>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
