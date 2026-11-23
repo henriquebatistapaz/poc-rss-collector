@@ -2,8 +2,6 @@ target/
 *.class
 .env
 .env.*
-/.ai-init/
-/.ai-init.json
 /AGENTS.md
 /CLAUDE.md
 /GEMINI.md
